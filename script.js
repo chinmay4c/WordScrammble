@@ -1,8 +1,19 @@
-const easyWords = ['cat', 'dog', 'sun', 'moon', 'tree', 'book', 'bird', 'fish', 'star', 'rain'];
-const mediumWords = ['python', 'javascript', 'html', 'css', 'react', 'nodejs', 'database', 'algorithm'];
-const hardWords = ['cryptocurrency', 'artificial', 'intelligence', 'blockchain', 'cybersecurity', 'quantum', 'nanotechnology'];
+// Word lists and categories
+const categories = {
+    animals: ['elephant', 'giraffe', 'penguin', 'cheetah', 'kangaroo'],
+    countries: ['brazil', 'japan', 'australia', 'egypt', 'canada'],
+    fruits: ['banana', 'strawberry', 'pineapple', 'watermelon', 'kiwi'],
+    sports: ['basketball', 'tennis', 'swimming', 'volleyball', 'cycling']
+};
 
-let words = mediumWords;
+const difficulties = {
+    easy: [].concat(...Object.values(categories).map(cat => cat.filter(word => word.length <= 6))),
+    medium: [].concat(...Object.values(categories).map(cat => cat.filter(word => word.length > 6 && word.length <= 8))),
+    hard: [].concat(...Object.values(categories).map(cat => cat.filter(word => word.length > 8)))
+};
+
+let currentCategory = '';
+let words = difficulties.medium;
 let currentWord = '';
 let scrambledWord = '';
 let score = 0;
@@ -11,15 +22,10 @@ let timerInterval;
 let level = 1;
 let gameMode = 'classic';
 let soundEnabled = true;
+let players = [];
+let currentPlayer = { name: 'Player 1', score: 0 };
 
-const screens = {
-    mainMenu: document.getElementById('main-menu'),
-    game: document.getElementById('game-screen'),
-    highScores: document.getElementById('high-scores-screen'),
-    achievements: document.getElementById('achievements-screen'),
-    settings: document.getElementById('settings-screen')
-};
-
+// DOM elements
 const elements = {
     scrambledWord: document.getElementById('scrambled-word'),
     userInput: document.getElementById('user-input'),
@@ -37,16 +43,42 @@ const elements = {
     mediumButton: document.getElementById('medium-btn'),
     hardButton: document.getElementById('hard-btn'),
     soundOnButton: document.getElementById('sound-on-btn'),
-    soundOffButton: document.getElementById('sound-off-btn')
+    soundOffButton: document.getElementById('sound-off-btn'),
+    lightThemeButton: document.getElementById('light-theme-btn'),
+    darkThemeButton: document.getElementById('dark-theme-btn'),
+    categoryDisplay: document.getElementById('category-display'),
+    playerList: document.getElementById('player-list'),
+    chatBox: document.getElementById('chat-box'),
+    chatInput: document.getElementById('chat-input'),
+    sendChatButton: document.getElementById('send-chat-btn'),
+    startMultiplayerButton: document.getElementById('start-multiplayer-btn'),
+    leaveMultiplayerButton: document.getElementById('leave-multiplayer-btn'),
+    timeBoostButton: document.getElementById('time-boost'),
+    revealLetterButton: document.getElementById('reveal-letter'),
+    skipWordButton: document.getElementById('skip-word')
+};
+
+const screens = {
+    mainMenu: document.getElementById('main-menu'),
+    gameModes: document.getElementById('game-modes'),
+    game: document.getElementById('game-screen'),
+    multiplayer: document.getElementById('multiplayer-screen'),
+    highScores: document.getElementById('high-scores-screen'),
+    achievements: document.getElementById('achievements-screen'),
+    settings: document.getElementById('settings-screen')
 };
 
 const buttons = {
+    singlePlayer: document.getElementById('single-player-btn'),
+    multiplayer: document.getElementById('multiplayer-btn'),
     classicMode: document.getElementById('classic-mode-btn'),
     timeAttack: document.getElementById('time-attack-btn'),
     endlessMode: document.getElementById('endless-mode-btn'),
+    categoryMode: document.getElementById('category-mode-btn'),
     highScores: document.getElementById('high-scores-btn'),
     achievements: document.getElementById('achievements-btn'),
     settings: document.getElementById('settings-btn'),
+    back: document.getElementById('back-btn'),
     backToMenu: document.querySelectorAll('#back-to-menu-btn')
 };
 
@@ -55,17 +87,26 @@ const achievements = [
     { id: 'speed_demon', name: 'Speed Demon', description: 'Guess 5 words in under 30 seconds', unlocked: false },
     { id: 'word_master', name: 'Word Master', description: 'Reach level 10 in Classic Mode', unlocked: false },
     { id: 'time_lord', name: 'Time Lord', description: 'Score 100 points in Time Attack Mode', unlocked: false },
-    { id: 'endless_warrior', name: 'Endless Warrior', description: 'Guess 50 words in Endless Mode', unlocked: false }
+    { id: 'endless_warrior', name: 'Endless Warrior', description: 'Guess 50 words in Endless Mode', unlocked: false },
+    { id: 'category_champion', name: 'Category Champion', description: 'Complete all categories in Category Challenge', unlocked: false },
+    { id: 'multiplayer_victor', name: 'Multiplayer Victor', description: 'Win a multiplayer game', unlocked: false }
 ];
 
 let highScores = {
     classic: [],
     timeAttack: [],
-    endless: []
+    endless: [],
+    category: []
 };
 
 function getRandomWord() {
-    return words[Math.floor(Math.random() * words.length)];
+    if (gameMode === 'category') {
+        return words[Math.floor(Math.random() * words.length)];
+    } else {
+        const categoryKeys = Object.keys(categories);
+        currentCategory = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
+        return categories[currentCategory][Math.floor(Math.random() * categories[currentCategory].length)];
+    }
 }
 
 function scrambleWord(word) {
@@ -78,6 +119,9 @@ function newWord() {
     elements.scrambledWord.textContent = scrambledWord;
     elements.userInput.value = '';
     elements.message.textContent = '';
+    if (gameMode === 'category') {
+        elements.categoryDisplay.textContent = `Category: ${currentCategory}`;
+    }
 }
 
 function checkGuess() {
@@ -85,7 +129,7 @@ function checkGuess() {
     if (userGuess === currentWord) {
         elements.message.textContent = 'Correct! Well done!';
         elements.message.style.color = 'green';
-        score += 10;
+        score += calculateScore();
         elements.scoreElement.textContent = score;
         if (gameMode === 'classic') {
             level++;
@@ -97,6 +141,14 @@ function checkGuess() {
         elements.message.textContent = 'Wrong. Try again!';
         elements.message.style.color = 'red';
     }
+}
+
+function calculateScore() {
+    let baseScore = 10;
+    if (gameMode === 'timeAttack') {
+        baseScore += Math.floor(timeLeft / 5);
+    }
+    return baseScore * (gameMode === 'hard' ? 2 : 1);
 }
 
 function startTimer() {
@@ -114,14 +166,14 @@ function startTimer() {
 }
 
 function setDifficulty(difficulty) {
-    words = difficulty;
+    words = difficulties[difficulty];
     elements.easyButton.classList.remove('active');
     elements.mediumButton.classList.remove('active');
     elements.hardButton.classList.remove('active');
     
-    if (difficulty === easyWords) {
+    if (difficulty === 'easy') {
         elements.easyButton.classList.add('active');
-    } else if (difficulty === mediumWords) {
+    } else if (difficulty === 'medium') {
         elements.mediumButton.classList.add('active');
     } else {
         elements.hardButton.classList.add('active');
@@ -240,3 +292,86 @@ function provideHint() {
 function toggleSound(enabled) {
     soundEnabled = enabled;
     elements.soundOnButton.classList.toggle('active', enabled);
+    elements.soundOffButton.classList.toggle('active', !enabled);
+    // Implement sound logic here
+}
+
+function toggleTheme(theme) {
+    document.body.classList.toggle('dark-theme', theme === 'dark');
+    elements.lightThemeButton.classList.toggle('active', theme === 'light');
+    elements.darkThemeButton.classList.toggle('active', theme === 'dark');
+}
+
+function initMultiplayer() {
+    // Implement multiplayer logic here (e.g., WebSocket connection)
+    showScreen('multiplayer');
+}
+
+function sendChatMessage() {
+    const message = elements.chatInput.value;
+    if (message.trim() !== '') {
+        const chatMessage = document.createElement('p');
+        chatMessage.textContent = `${currentPlayer.name}: ${message}`;
+        elements.chatBox.appendChild(chatMessage);
+        elements.chatInput.value = '';
+        // Send message to other players (implement WebSocket logic)
+    }
+}
+
+function usePowerUp(powerUp) {
+    switch (powerUp) {
+        case 'timeBoost':
+            timeLeft += 10;
+            elements.timerElement.textContent = timeLeft;
+            break;
+        case 'revealLetter':
+            const revealIndex = Math.floor(Math.random() * currentWord.length);
+            elements.scrambledWord.textContent = 
+                scrambledWord.substring(0, revealIndex) + 
+                currentWord[revealIndex] + 
+                scrambledWord.substring(revealIndex + 1);
+            break;
+        case 'skipWord':
+            newWord();
+            break;
+    }
+    // Implement cooldown or limited uses for power-ups
+}
+
+// Event Listeners
+elements.submitButton.addEventListener('click', checkGuess);
+elements.newWordButton.addEventListener('click', newWord);
+elements.hintButton.addEventListener('click', provideHint);
+elements.quitButton.addEventListener('click', () => showScreen('mainMenu'));
+
+buttons.singlePlayer.addEventListener('click', () => showScreen('gameModes'));
+buttons.multiplayer.addEventListener('click', initMultiplayer);
+buttons.classicMode.addEventListener('click', () => startGame('classic'));
+buttons.timeAttack.addEventListener('click', () => startGame('timeAttack'));
+buttons.endlessMode.addEventListener('click', () => startGame('endless'));
+buttons.categoryMode.addEventListener('click', () => startGame('category'));
+buttons.highScores.addEventListener('click', () => {
+    displayHighScores();
+    showScreen('highScores');
+});
+buttons.achievements.addEventListener('click', () => {
+    displayAchievements();
+    showScreen('achievements');
+});
+buttons.settings.addEventListener('click', () => showScreen('settings'));
+buttons.back.addEventListener('click', () => showScreen('mainMenu'));
+buttons.backToMenu.forEach(btn => btn.addEventListener('click', () => showScreen('mainMenu')));
+
+elements.easyButton.addEventListener('click', () => setDifficulty('easy'));
+elements.mediumButton.addEventListener('click', () => setDifficulty('medium'));
+elements.hardButton.addEventListener('click', () => setDifficulty('hard'));
+elements.soundOnButton.addEventListener('click', () => toggleSound(true));
+elements.soundOffButton.addEventListener('click', () => toggleSound(false));
+elements.lightThemeButton.addEventListener('click', () => toggleTheme('light'));
+elements.darkThemeButton.addEventListener('click', () => toggleTheme('dark'));
+
+elements.sendChatButton.addEventListener('click', sendChatMessage);
+elements.startMultiplayerButton.addEventListener('click', () => {
+    // Implement start multiplayer game logic
+});
+elements.leaveMultiplayerButton
