@@ -9,20 +9,53 @@
 <body>
     <div class="container">
         <h1>Word Scramble Game</h1>
-        <div id="game-info">
-            <p>Score: <span id="score">0</span></p>
-            <p>Time: <span id="timer">60</span>s</p>
+        <div id="main-menu" class="screen">
+            <h2>Main Menu</h2>
+            <button id="classic-mode-btn">Classic Mode</button>
+            <button id="time-attack-btn">Time Attack</button>
+            <button id="endless-mode-btn">Endless Mode</button>
+            <button id="high-scores-btn">High Scores</button>
+            <button id="achievements-btn">Achievements</button>
+            <button id="settings-btn">Settings</button>
         </div>
-        <p id="scrambled-word"></p>
-        <input type="text" id="user-input" placeholder="Enter your guess">
-        <button id="submit-btn">Submit</button>
-        <p id="message"></p>
-        <button id="new-word-btn">New Word</button>
-        <div id="difficulty">
-            <p>Difficulty:</p>
-            <button id="easy-btn">Easy</button>
-            <button id="medium-btn">Medium</button>
-            <button id="hard-btn">Hard</button>
+        <div id="game-screen" class="screen hidden">
+            <div id="game-info">
+                <p>Score: <span id="score">0</span></p>
+                <p>Time: <span id="timer">60</span>s</p>
+                <p>Level: <span id="level">1</span></p>
+            </div>
+            <p id="scrambled-word"></p>
+            <input type="text" id="user-input" placeholder="Enter your guess">
+            <button id="submit-btn">Submit</button>
+            <p id="message"></p>
+            <button id="new-word-btn">New Word</button>
+            <button id="hint-btn">Hint</button>
+            <button id="quit-btn">Quit</button>
+        </div>
+        <div id="high-scores-screen" class="screen hidden">
+            <h2>High Scores</h2>
+            <ul id="high-scores-list"></ul>
+            <button id="back-to-menu-btn">Back to Menu</button>
+        </div>
+        <div id="achievements-screen" class="screen hidden">
+            <h2>Achievements</h2>
+            <ul id="achievements-list"></ul>
+            <button id="back-to-menu-btn">Back to Menu</button>
+        </div>
+        <div id="settings-screen" class="screen hidden">
+            <h2>Settings</h2>
+            <div id="difficulty">
+                <p>Difficulty:</p>
+                <button id="easy-btn">Easy</button>
+                <button id="medium-btn">Medium</button>
+                <button id="hard-btn">Hard</button>
+            </div>
+            <div id="sound-settings">
+                <p>Sound:</p>
+                <button id="sound-on-btn">On</button>
+                <button id="sound-off-btn">Off</button>
+            </div>
+            <button id="back-to-menu-btn">Back to Menu</button>
         </div>
     </div>
     <script src="script.js"></script>
