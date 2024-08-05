@@ -9,11 +9,21 @@
 <body>
     <div class="container">
         <h1>Word Scramble Game</h1>
+        <div id="game-info">
+            <p>Score: <span id="score">0</span></p>
+            <p>Time: <span id="timer">60</span>s</p>
+        </div>
         <p id="scrambled-word"></p>
         <input type="text" id="user-input" placeholder="Enter your guess">
         <button id="submit-btn">Submit</button>
         <p id="message"></p>
         <button id="new-word-btn">New Word</button>
+        <div id="difficulty">
+            <p>Difficulty:</p>
+            <button id="easy-btn">Easy</button>
+            <button id="medium-btn">Medium</button>
+            <button id="hard-btn">Hard</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
