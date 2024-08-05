@@ -6,6 +6,12 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+}
+
+body.dark-theme {
+    background-color: #333;
+    color: #fff;
 }
 
 .container {
@@ -16,6 +22,12 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 600px;
     width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.dark-theme .container {
+    background-color: #444;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 h1, h2 {
@@ -37,6 +49,18 @@ h1, h2 {
     justify-content: space-between;
     width: 100%;
     margin-bottom: 1rem;
+}
+
+#power-ups {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+#power-ups button {
+    font-size: 20px;
+    padding: 5px 10px;
+    margin: 0 5px;
 }
 
 #scrambled-word {
@@ -82,15 +106,15 @@ button:hover {
     background-color: #f44336;
 }
 
-#difficulty, #sound-settings {
+#difficulty, #sound-settings, #theme-settings {
     margin-top: 1rem;
 }
 
-#difficulty button, #sound-settings button {
+#difficulty button, #sound-settings button, #theme-settings button {
     background-color: #f44336;
 }
 
-#difficulty button.active, #sound-settings button.active {
+#difficulty button.active, #sound-settings button.active, #theme-settings button.active {
     background-color: #4CAF50;
 }
 
@@ -102,6 +126,29 @@ button:hover {
 
 #high-scores-list li, #achievements-list li {
     margin-bottom: 0.5rem;
+}
+
+#multiplayer-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#player-list, #chat-box {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+}
+
+#chat-input {
+    width: calc(100% - 70px);
+}
+
+#send-chat-btn {
+    width: 60px;
 }
 
 @media (max-width: 600px) {

@@ -11,12 +11,19 @@
         <h1>Word Scramble Game</h1>
         <div id="main-menu" class="screen">
             <h2>Main Menu</h2>
-            <button id="classic-mode-btn">Classic Mode</button>
-            <button id="time-attack-btn">Time Attack</button>
-            <button id="endless-mode-btn">Endless Mode</button>
+            <button id="single-player-btn">Single Player</button>
+            <button id="multiplayer-btn">Multiplayer</button>
             <button id="high-scores-btn">High Scores</button>
             <button id="achievements-btn">Achievements</button>
             <button id="settings-btn">Settings</button>
+        </div>
+        <div id="game-modes" class="screen hidden">
+            <h2>Game Modes</h2>
+            <button id="classic-mode-btn">Classic Mode</button>
+            <button id="time-attack-btn">Time Attack</button>
+            <button id="endless-mode-btn">Endless Mode</button>
+            <button id="category-mode-btn">Category Challenge</button>
+            <button id="back-btn">Back</button>
         </div>
         <div id="game-screen" class="screen hidden">
             <div id="game-info">
@@ -24,6 +31,12 @@
                 <p>Time: <span id="timer">60</span>s</p>
                 <p>Level: <span id="level">1</span></p>
             </div>
+            <div id="power-ups">
+                <button id="time-boost">⏱️ +10s</button>
+                <button id="reveal-letter">🔍 Reveal</button>
+                <button id="skip-word">⏭️ Skip</button>
+            </div>
+            <p id="category-display"></p>
             <p id="scrambled-word"></p>
             <input type="text" id="user-input" placeholder="Enter your guess">
             <button id="submit-btn">Submit</button>
@@ -31,6 +44,15 @@
             <button id="new-word-btn">New Word</button>
             <button id="hint-btn">Hint</button>
             <button id="quit-btn">Quit</button>
+        </div>
+        <div id="multiplayer-screen" class="screen hidden">
+            <h2>Multiplayer</h2>
+            <div id="player-list"></div>
+            <div id="chat-box"></div>
+            <input type="text" id="chat-input" placeholder="Type your message...">
+            <button id="send-chat-btn">Send</button>
+            <button id="start-multiplayer-btn">Start Game</button>
+            <button id="leave-multiplayer-btn">Leave Room</button>
         </div>
         <div id="high-scores-screen" class="screen hidden">
             <h2>High Scores</h2>
@@ -54,6 +76,11 @@
                 <p>Sound:</p>
                 <button id="sound-on-btn">On</button>
                 <button id="sound-off-btn">Off</button>
+            </div>
+            <div id="theme-settings">
+                <p>Theme:</p>
+                <button id="light-theme-btn">Light</button>
+                <button id="dark-theme-btn">Dark</button>
             </div>
             <button id="back-to-menu-btn">Back to Menu</button>
         </div>
