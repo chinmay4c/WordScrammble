@@ -4,11 +4,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: #fff;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .container {
@@ -45,6 +45,9 @@ h1, h2 {
     width: 100%;
     margin-bottom: 1rem;
     font-weight: bold;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 10px;
 }
 
 #power-ups {
@@ -71,43 +74,51 @@ h1, h2 {
 }
 
 #scrambled-word {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     margin-bottom: 1rem;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 input {
-    padding: 0.5rem;
+    padding: 0.75rem;
     font-size: 18px;
     width: 80%;
     margin-bottom: 1rem;
     border: none;
     border-radius: 5px;
     transition: transform 0.2s, box-shadow 0.3s;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 input:focus {
     transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    outline: none;
 }
 
 button {
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 16px;
     cursor: pointer;
     background: linear-gradient(45deg, #00dbde, #fc00ff);
     color: white;
     border: none;
     border-radius: 50px;
-    margin: 5px;
+    margin: 8px;
     transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 button:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     background: linear-gradient(45deg, #fc00ff, #00dbde);
 }
 
@@ -115,6 +126,9 @@ button:hover {
     margin-top: 1rem;
     font-weight: bold;
     text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .hidden {
@@ -122,32 +136,48 @@ button:hover {
 }
 
 #difficulty, #sound-settings, #theme-settings {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 10px;
 }
 
 #difficulty button, #sound-settings button, #theme-settings button {
     background: linear-gradient(45deg, #00dbde, #fc00ff);
     border-radius: 50px;
-    padding: 10px 15px;
+    padding: 10px 20px;
     transition: background 0.3s, transform 0.2s;
+    margin: 5px;
 }
 
 #difficulty button.active, #sound-settings button.active, #theme-settings button.active {
     background: linear-gradient(45deg, #fc00ff, #00dbde);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 #high-scores-list, #achievements-list {
     list-style-type: none;
     padding: 0;
     text-align: left;
+    max-height: 300px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 15px;
 }
 
 #high-scores-list li, #achievements-list li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     background: rgba(255, 255, 255, 0.1);
-    padding: 0.5rem;
+    padding: 10px;
     border-radius: 5px;
     animation: fadeIn 0.5s ease-out;
+    transition: transform 0.2s;
+}
+
+#high-scores-list li:hover, #achievements-list li:hover {
+    transform: translateX(5px);
 }
 
 #multiplayer-screen {
@@ -162,21 +192,24 @@ button:hover {
     overflow-y: auto;
     border: 1px solid rgba(255, 255, 255, 0.2);
     margin-bottom: 1rem;
-    padding: 0.5rem;
-    border-radius: 5px;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
 }
 
 #chat-input {
     width: calc(100% - 70px);
-    padding: 0.5rem;
+    padding: 0.75rem;
     font-size: 16px;
     border: none;
     border-radius: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
 }
 
 #send-chat-btn {
     width: 60px;
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
     background: linear-gradient(45deg, #00dbde, #fc00ff);
     border: none;
@@ -191,15 +224,19 @@ button:hover {
 
 @media (max-width: 600px) {
     .container {
-        padding: 1rem;
+        padding: 1.5rem;
     }
 
-    input {
+    input, button {
         width: 100%;
     }
 
-    button {
-        width: 100%;
+    #power-ups {
+        flex-direction: column;
+    }
+
+    #power-ups button {
+        margin: 5px 0;
     }
 }
 
@@ -216,151 +253,197 @@ button:hover {
 
 @keyframes slideIn {
     from {
-        transform: translateY(100%);
+        transform: translateY(50px);
+        opacity: 0;
     }
     to {
         transform: translateY(0);
+        opacity: 1;
     }
 }
 
-/* Additional improvements */
-header {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 1rem;
-    width: 100%;
-    text-align: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+/* New additions start here */
+
+.game-title {
+    font-size: 2.5em;
+    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
 }
 
-footer {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 1rem;
-    width: 100%;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-}
-
-header h1, footer p {
-    margin: 0;
-    color: #fff;
-    font-weight: bold;
-}
-
-.container {
-    margin-top: 80px;
-    margin-bottom: 60px;
-}
-
-button:active {
-    transform: scale(0.95);
-    box-shadow: none;
-}
-
-input:invalid {
-    border: 2px solid #ff4b2b;
-}
-
-input:valid {
-    border: 2px solid #00dbde;
-}
-
-button:focus {
-    outline: none;
-}
-
-button:disabled {
-    background: #ccc;
-    color: #666;
-    cursor: not-allowed;
-}
-
-#theme-settings button {
-    background: linear-gradient(45deg, #ff7e5f, #feb47b);
-}
-
-#sound-settings button {
-    background: linear-gradient(45deg, #86a8e7, #91eae4);
-}
-
-#difficulty button {
-    background: linear-gradient(45deg, #ff9a9e, #fecfef);
-}
-
-.modal {
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.button-group {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    gap: 10px;
+    margin-bottom: 1rem;
 }
 
-.modal.active {
+.button-group button {
+    flex: 1 1 calc(50% - 10px);
+    max-width: calc(50% - 10px);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(45deg, #00dbde, #fc00ff);
+    width: 0;
+    transition: width 0.3s ease-out;
+}
+
+.timer {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.shake {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+        transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
 }
 
-.modal-content {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 2rem;
-    border-radius: 15px;
-    text-align: center;
-    animation: fadeIn 0.5s ease-out;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #f0f0f0;
+    opacity: 0;
 }
 
-.modal h2 {
-    margin-top: 0;
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
 }
 
-.modal button {
-    background: linear-gradient(45deg, #ff416c, #ff4b2b);
-    margin-top: 1rem;
+.dark-mode {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: #ecf0f1;
 }
 
-.achievement-badge {
-    background: linear-gradient(45deg, #ffb347, #ffcc33);
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
+.dark-mode .container {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode button {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+}
+
+.dark-mode button:hover {
+    background: linear-gradient(45deg, #2980b9, #3498db);
+}
+
+.category-badge {
     display: inline-block;
-    color: #fff;
-    font-weight: bold;
-    margin-top: 0.5rem;
-    animation: fadeIn 0.5s ease-out;
+    padding: 5px 10px;
+    background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+    color: #333;
+    border-radius: 20px;
+    font-size: 0.9em;
+    margin-bottom: 1rem;
 }
 
-.high-score {
-    background: rgba(0, 0, 0, 0.1);
-    padding: 0.5rem;
+.level-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+
+.word-definition {
+    font-style: italic;
+    margin-top: 1rem;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
 }
 
-@media (max-width: 600px) {
-    .container {
-        padding: 1rem;
-    }
+.achievement-unlocked {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(45deg, #ffd700, #ffa500);
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideInRight 0.5s ease-out, fadeOut 0.5s ease-in 2.5s forwards;
+}
 
-    input {
-        width: 100%;
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
     }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
 
-    button {
-        width: 100%;
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
     }
 }
